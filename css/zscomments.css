@@ -1,6 +1,8 @@
-.comments-form {
+.comments-form .comments-list {
+/* 
   max-width: 30em;
   margin: 1em 0;
+ */
   border-top: 1px solid #aaa;
 }
 
@@ -11,7 +13,7 @@
 
 .comments-form input,
 .comments-form textarea {
-  width: 100%;
+  width: 95%;
   border: 1px solid #aaa;
   border-radius: 0.2em;
 }
@@ -21,10 +23,11 @@
 }
 
 .comments-form button {
-  padding: 0.4em 1em;
+/*   padding: 0.4em 1em; */
+  padding: var(--s--2) var(--s0);
   border-radius: 0.3em;
   border: 1px solid #aaa;
-  background-color: #ccc;
+  background-color: aliceblue;
 }
 
 .comments-form .alert {
@@ -40,28 +43,37 @@
 }
 
 .comment-entry {
-  margin-bottom: 1em;
+  margin-bottom: var(--s--1);
 }
 
 .comment-header {
   display: flex;
-  font-size: 0.8em;
-  margin-bottom: 0.5em;
+  font-size: var(--s--1);
+  margin-bottom: 0;
+}
+
+.comment-text {
+ font-size: var(--s--1);
 }
 
 .comment-gravatar {
-  margin-right: 0.5em;
+  margin-right: var(--s--2);
+}
+
+.comment-gravatar > img {
+  border-radius: 50%;
 }
 
 .comment-author {
-  font-weight: bold;
+  font-size: var(--s--1);
 }
 
 .comment-date {
   font-style: italic;
+  font-size: var(--s--1);
 }
 
 .comment-reply {
-  font-size: 0.8em;
+  font-size: var(--s--2);
 }
 

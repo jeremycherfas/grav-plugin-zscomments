@@ -9,7 +9,7 @@ en:
       EMAIL_PLACEHOLDER: 'Enter your email address'
       MESSAGE_LABEL: Comment
       MESSAGE_PLACEHOLDER: 'Enter your comment'
-      SUBMIT_COMMENT_BUTTON_TEXT: Submit
+      SUBMIT_COMMENT_BUTTON_TEXT: 'Send it!'
       EMAIL_NEW_COMMENT_SUBJECT: '[New Comment] from {{ form.value.name|e }}'
       THANK_YOU_MESSAGE: 'Thank you for writing your comment!'
       QUICK_REPLY_LABEL: 'Quick reply'
