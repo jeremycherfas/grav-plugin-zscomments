@@ -64,12 +64,20 @@ class ZscommentsPlugin extends Plugin
    * Add the comment form information to the page header dynamically
    *
    * Used by Form plugin >= 2.0
+   *
+   * This fires once per page whenever Grav builds or rebuilds its page
+   * cache (see Pages::recurse() / Page::getForms()), not just for the page
+   * actually being viewed. So it must not rely on $this->enable, which is
+   * only calculated from the current request's own URL. Instead it checks
+   * the route of the specific page carried on the event.
    */
   public function onFormPageHeaderProcessed(Event $event)
   {
     $header = $event['header'];
+    $page = $event['page'] ?? null;
+    $route = $page instanceof PageInterface ? $page->route() : null;
 
-    if ($this->enable) {
+    if ($route !== null && $this->isRouteEnabled($route)) {
       if (!isset($header->form)) {
         $header->form = $this->getZscommentsFormConfig();
       }
@@ -500,25 +508,36 @@ class ZscommentsPlugin extends Plugin
    */
   private function calculateEnable()
   {
-    $uri = $this->grav['uri'];
+    $this->enable = $this->isRouteEnabled($this->grav['uri']->path());
+  }
 
+  /**
+   * Test any given path against the enable_on_routes and disable_on_routes config options.
+   *
+   * Used both for the current request (see calculateEnable()) and, separately, for each
+   * individual page passed to onFormPageHeaderProcessed(), since that event fires once per
+   * page during a full page-cache rebuild, not only for the page actually being viewed.
+   */
+  private function isRouteEnabled($path)
+  {
     $disable_on_routes = (array)$this->config->get('plugins.zscomments.disable_on_routes');
     $enable_on_routes = (array)$this->config->get('plugins.zscomments.enable_on_routes');
 
-    $path = $uri->path();
+    if (in_array($path, $disable_on_routes)) {
+      return false;
+    }
 
-    if (!in_array($path, $disable_on_routes)) {
-      if (in_array($path, $enable_on_routes)) {
-        $this->enable = true;
-      } else {
-        foreach ($enable_on_routes as $route) {
-          if (Utils::startsWith($path, $route)) {
-            $this->enable = true;
-            break;
-          }
-        }
+    if (in_array($path, $enable_on_routes)) {
+      return true;
+    }
+
+    foreach ($enable_on_routes as $route) {
+      if (Utils::startsWith($path, $route)) {
+        return true;
       }
     }
+
+    return false;
   }
 
   /**
